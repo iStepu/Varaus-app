@@ -5,6 +5,7 @@ class User(db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), nullable=False)
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(200), nullable=False, unique=True)
     password = db.Column(db.String(200))
@@ -18,8 +19,8 @@ class User(db.Model):
         return cls.query.filter_by(id=id).first()
 
     @classmethod
-    def get_by_name(cls, name):
-        return cls.query.filter_by(username=name).first()
+    def get_by_username(cls, username):
+        return cls.query.filter_by(username=username).first()
 
     @classmethod
     def get_by_email(cls, email):
