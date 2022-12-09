@@ -9,6 +9,7 @@ class Workspace(db.Model):
     campus = db.Column(db.String(100), nullable=False)
     building = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(200))
+    reservations = db.relationship('Reservation', backref='workspace')
 
     created_at = db.Column(db.DateTime(), nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime(), nullable=False, server_default=db.func.now(), onupdate=db.func.now())

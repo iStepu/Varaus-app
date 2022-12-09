@@ -8,6 +8,7 @@ class User(db.Model):
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(200), nullable=False, unique=True)
     password = db.Column(db.String(200))
+    reservations = db.relationship('Reservation', backref='user')
 
     created_at = db.Column(db.DateTime(), nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime(), nullable=False, server_default=db.func.now(), onupdate=db.func.now())
