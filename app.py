@@ -5,6 +5,12 @@ from flask_restful import Api
 from config import Config
 from extensions import db, jwt
 
+# Imported directly to be able to create the tables, can be removed
+# later when used in resources.
+from models.user import User
+from models.workspace import Workspace
+from models.reservation import Reservation
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
