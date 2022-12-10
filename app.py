@@ -4,6 +4,8 @@ from flask_restful import Api
 
 from config import Config
 from extensions import db, jwt
+from resources.user import UserListResource, UserResource, MeResource
+from resources.token import TokenResource, RefreshResource, RevokeResource, block_list
 
 # Imported directly to be able to create the tables, can be removed
 # later when used in resources.
@@ -25,16 +27,21 @@ def register_extensions(app):
     db.init_app(app)
     migrate = Migrate(app, db)
     jwt.init_app(app)
-
-    # To be enabled later
-    # @jwt.token_in_blocklist_loader
-    # def check_if_token_revoked(jwt_header, jwt_payload):
-    #     jti = jwt_payload["jti"]
-    #     return jti in block_list
+    @jwt.token_in_blocklist_loader
+    def check_if_token_revoked(jwt_header, jwt_payload):
+        jti = jwt_payload["jti"]
+        return jti in block_list
 
 
 def register_resources(app):
     api = Api(app)
+
+    api.add_resource(UserListResource, '/users')
+    api.add_resource(UserResource, '/users/<string:username>')
+    api.add_resource(MeResource, '/me')
+    api.add_resource(TokenResource, '/token')
+    api.add_resource(RefreshResource, '/refresh')
+    api.add_resource(RevokeResource, '/revoke')
 
 
 if __name__ == '__main__':
