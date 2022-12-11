@@ -10,7 +10,6 @@ class ReservationSchema(Schema):
     user_id = fields.Integer(dump_only=True)
     workspace_id = fields.Integer(dump_only=True)
     date = fields.DateTime(dump_only=True)
-    
 
     is_publish = fields.Boolean(dump_only=True)
 
@@ -19,10 +18,8 @@ class ReservationSchema(Schema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-
     @post_dump(pass_many=True)
     def wrap(self, data, many, **kwargs):
         if many:
             return {'data': data}
         return data
-
