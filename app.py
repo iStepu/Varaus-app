@@ -6,6 +6,7 @@ from config import Config
 from extensions import db, jwt
 from resources.user import UserListResource, UserResource, MeResource
 from resources.token import TokenResource, RefreshResource, RevokeResource, block_list
+from resources.workspace import WorkspaceResource
 
 # Imported directly to be able to create the tables, can be removed
 # later when used in resources.
@@ -42,6 +43,7 @@ def register_resources(app):
     api.add_resource(TokenResource, '/token')
     api.add_resource(RefreshResource, '/refresh')
     api.add_resource(RevokeResource, '/revoke')
+    api.add_resource(WorkspaceResource, '/workspaces')
 
 
 if __name__ == '__main__':
