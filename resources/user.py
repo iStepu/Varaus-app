@@ -9,9 +9,15 @@ from schemas.user import UserSchema
 
 user_schema = UserSchema()
 user_public_schema = UserSchema(exclude=('email', ))
+user_list_schema = UserSchema(many=True, exclude=('email', ))
 
 
 class UserListResource(Resource):
+
+    @staticmethod
+    def get():
+        users = User.get_all()
+        return user_list_schema.dump(users), HTTPStatus.OK
 
     @staticmethod
     def post():
