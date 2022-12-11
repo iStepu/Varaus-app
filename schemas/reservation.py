@@ -9,7 +9,8 @@ class ReservationSchema(Schema):
     id = fields.Integer(dump_only=True)
     user_id = fields.Integer(dump_only=True)
     workspace_id = fields.Integer(dump_only=True)
-    date = fields.DateTime(dump_only=True)
+    start_date = fields.DateTime(dump_only=True)
+    end_date = fields.DateTime(dump_only=True)
 
     is_publish = fields.Boolean(dump_only=True)
 

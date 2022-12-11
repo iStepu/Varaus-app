@@ -7,7 +7,8 @@ class Reservation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey("user.id"), nullable=False)
     workspace_id = db.Column(db.Integer(), db.ForeignKey("workspace.id"), nullable=False)
-    date = db.Column(db.DateTime(), nullable=False)
+    start_date = db.Column(db.DateTime(), nullable=False)
+    end_date = db.Column(db.DateTime(), nullable=False)
 
     created_at = db.Column(db.DateTime(), nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime(), nullable=False, server_default=db.func.now(), onupdate=db.func.now())
