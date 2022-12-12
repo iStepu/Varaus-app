@@ -14,12 +14,6 @@ reservation_list_schema = ReservationSchema(many=True)
 
 class ReservationListResource(Resource):
 
-    def get(self):
-
-        reservation = Reservation.get_all_published()
-
-        return reservation_list_schema.dump(reservation), HTTPStatus.OK
-
     @jwt_required()
     def post(self):
         json_data = request.get_json()
@@ -50,11 +44,6 @@ class ReservationResource(Resource):
 
         current_user = get_jwt_identity()
 
-        if reservation.is_publish == False and reservation.user_id != current_user:
-            return {'message': 'Access is not allowed'}, HTTPStatus.FORBIDDEN
-
-        return reservation.data(), HTTPStatus.OK
-
     @jwt_required()
     def patch(self, reservation_id):
 
@@ -66,7 +55,7 @@ class ReservationResource(Resource):
             errors = err.messages
             return {'message': 'Validation errors', 'errors': errors}, HTTPStatus.BAD_REQUEST
 
-        reservation =Reservation.get_by_id(reservation_id=reservation_id)
+        reservation = Reservation.get_by_id(reservation_id=reservation_id)
 
         if reservation is None:
             return {'message': 'Reservation not found'}, HTTPStatus.NOT_FOUND
@@ -120,35 +109,5 @@ class ReservationResource(Resource):
             return {'message': 'Access is not allowed'}, HTTPStatus.FORBIDDEN
 
         reservation.delete()
-
-        return {}, HTTPStatus.NO_CONTENT
-
-
-class ReservationPublishResource(Resource):
-
-    @jwt_required()
-    def put(self, reservation_id):
-        reservation = Reservation.get_by_id(reservation_id=reservation_id)
-
-        if reservation is None:
-            return {'message': 'reservation not found'}, HTTPStatus.NOT_FOUND
-
-        current_user = get_jwt_identity()
-
-        if current_user != reservation.user_id:
-            return {'message': 'Access denied!'}, HTTPStatus.FORBIDDEN
-
-        reservation.is_publish = True
-        reservation.save()
-
-        return {}, HTTPStatus.NO_CONTENT
-
-    def delete(self, reservation_id):
-        reservation = next((reservation for reservation in reservation_list if reservation.id == reservation_id), None)
-
-        if reservation is None:
-            return {'message': 'reservation not found'}, HTTPStatus.NOT_FOUND
-
-        reservation.is_publish = False
 
         return {}, HTTPStatus.NO_CONTENT
