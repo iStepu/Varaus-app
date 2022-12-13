@@ -111,3 +111,32 @@ class MeResource(Resource):
     def get(self):
         user = User.get_by_id(id=get_jwt_identity())
         return user_schema.dump(user), HTTPStatus.OK
+
+
+class UserAdminRightsResource(Resource):
+
+    @staticmethod
+    def put(username):
+        user = User.get_by_username(username)
+
+        if not user:
+            return {"message": "user not found"}, HTTPStatus.NOT_FOUND
+
+        user.is_admin = True
+
+        user.save()
+
+        return {}, HTTPStatus.NO_CONTENT
+
+    @staticmethod
+    def delete(username):
+        user = User.get_by_username(username)
+
+        if not user:
+            return {"message": "user not found"}, HTTPStatus.NOT_FOUND
+
+        user.is_admin = False
+
+        user.save()
+
+        return {}, HTTPStatus.NO_CONTENT
