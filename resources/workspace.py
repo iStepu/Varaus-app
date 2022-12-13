@@ -19,8 +19,8 @@ class WorkspaceListResource(Resource):
         workspaces = Workspace.get_all()
         return workspace_list_schema.dump(workspaces), HTTPStatus.OK
 
-    @staticmethod
-    def post():
+    @jwt_required()
+    def post(self):
         json_data = request.get_json()
 
         try:
@@ -28,6 +28,11 @@ class WorkspaceListResource(Resource):
         except ValidationError as err:
             errors = err.messages
             return {'message': 'Validation errors', 'errors': errors}, HTTPStatus.BAD_REQUEST
+
+        current_user = User.get_by_id(get_jwt_identity())
+
+        if not current_user.is_admin:
+            return {'message': 'Access is not allowed, current user is not admin'}, HTTPStatus.FORBIDDEN
 
         if Workspace.get_by_workspace_id(data.get('id')):
             return {'message': 'id already used'}, HTTPStatus.BAD_REQUEST
