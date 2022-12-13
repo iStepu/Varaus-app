@@ -8,10 +8,10 @@ class ReservationSchema(Schema):
 
     id = fields.Integer(dump_only=True)
     user_id = fields.Integer(dump_only=True)
-    workspace_id = fields.Integer(dump_only=True)
+    workspace_id = fields.Integer(required=True)
 
-    start_date = fields.DateTime(dump_only=True)
-    end_date = fields.DateTime(dump_only=True)
+    start_date = fields.DateTime('%d-%m-%YT%H:%M', required=True)
+    end_date = fields.DateTime('%d-%m-%YT%H:%M', required=True)
 
     author = fields.Nested(UserSchema, attribute='user', dump_only=True, only=['id', 'username'])
 
