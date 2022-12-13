@@ -59,6 +59,51 @@ class UserResource(Resource):
 
         return data, HTTPStatus.OK
 
+    @jwt_required()
+    def patch(self, username):
+        json_data = request.get_json()
+
+        try:
+            data = user_schema.load(data=json_data, partial=True)
+        except ValidationError as err:
+            errors = err.messages
+            return {'message': 'Validation errors', 'errors': errors}, HTTPStatus.BAD_REQUEST
+
+        user = User.get_by_username(username=username)
+
+        if user is None:
+            return {'message': 'User not found'}, HTTPStatus.NOT_FOUND
+
+        current_user = get_jwt_identity()
+
+        if current_user != user.id:
+            return {'message': 'Access is not allowed'}, HTTPStatus.FORBIDDEN
+
+        user.username = data.get('username') or user.username
+        user.name = data.get('name') or user.name
+        user.email = data.get('email') or user.email
+        user.password = data.get('password') or user.password
+
+        user.save()
+
+        return user_schema.dump(user), HTTPStatus.OK
+
+    @jwt_required()
+    def delete(self, username):
+        user = User.get_by_username(username=username)
+
+        if not user:
+            return {"message": "User not found"}, HTTPStatus.NOT_FOUND
+
+        current_user = get_jwt_identity()
+
+        if current_user != user.id:
+            return {'message': 'Access is not allowed'}, HTTPStatus.FORBIDDEN
+
+        user.delete()
+
+        return {}, HTTPStatus.NO_CONTENT
+
 
 class MeResource(Resource):
 
