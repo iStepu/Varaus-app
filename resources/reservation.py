@@ -27,7 +27,7 @@ class ReservationListResource(Resource):
             return {'message': 'Validation errors', 'errors': errors}, HTTPStatus.BAD_REQUEST
 
         if not Workspace.get_by_workspace_id(data.get("workspace_id")):
-            return {'message': f'Workspace does not exist'}, HTTPStatus.BAD_REQUEST
+            return {'message': 'Workspace does not exist'}, HTTPStatus.BAD_REQUEST
 
         reservation = Reservation(**data)
         reservation.user_id = current_user
