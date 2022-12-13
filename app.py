@@ -48,6 +48,7 @@ def register_resources(app):
     api.add_resource(RefreshResource, '/refresh')
     api.add_resource(RevokeResource, '/revoke')
     api.add_resource(ReservationListResource, '/reservations')
+    api.add_resource(ReservationResource, '/reservations/<int:reservation_id>')
     api.add_resource(WorkspaceListResource, '/workspaces')
     api.add_resource(WorkspaceResource, '/workspaces/<int:workspace_id>')
 

@@ -15,6 +15,11 @@ reservation_list_schema = ReservationSchema(many=True)
 
 class ReservationListResource(Resource):
 
+    @staticmethod
+    def get():
+        reservations = Reservation.get_all()
+        return reservation_list_schema.dump(reservations), HTTPStatus.OK
+
     @jwt_required()
     def post(self):
         json_data = request.get_json()
