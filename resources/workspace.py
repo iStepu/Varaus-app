@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource
-from flask_jwt_extended import get_jwt_identity, jwt_required
+from flask_jwt_extended import jwt_required
 from marshmallow import ValidationError
 from http import HTTPStatus
 
@@ -14,6 +14,11 @@ workspace_list_schema = WorkspaceSchema(many=True)
 class WorkspaceListResource(Resource):
 
     @staticmethod
+    def get():
+        workspaces = Workspace.get_all()
+        return workspace_list_schema.dump(workspaces), HTTPStatus.OK
+
+    @staticmethod
     def post():
         json_data = request.get_json()
 
@@ -23,7 +28,7 @@ class WorkspaceListResource(Resource):
             errors = err.messages
             return {'message': 'Validation errors', 'errors': errors}, HTTPStatus.BAD_REQUEST
 
-        if Workspace.get_by_workspace_id(data.get('username')):
+        if Workspace.get_by_workspace_id(data.get('id')):
             return {'message': 'id already used'}, HTTPStatus.BAD_REQUEST
 
         if Workspace.get_by_name(data.get('name')):
