@@ -15,6 +15,10 @@ class Workspace(db.Model):
     updated_at = db.Column(db.DateTime(), nullable=False, server_default=db.func.now(), onupdate=db.func.now())
 
     @classmethod
+    def get_all(cls):
+        return cls.query.order_by(cls.id).all()
+
+    @classmethod
     def get_by_workspace_id(cls, id):
         return cls.query.filter_by(id=id).first()
 
