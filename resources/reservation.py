@@ -45,58 +45,6 @@ class ReservationResource(Resource):
         current_user = get_jwt_identity()
 
     @jwt_required()
-    def patch(self, reservation_id):
-
-        json_data = request.get_json()
-
-        try:
-            data = reservation_schema.load(data=json_data)
-        except ValidationError as err:
-            errors = err.messages
-            return {'message': 'Validation errors', 'errors': errors}, HTTPStatus.BAD_REQUEST
-
-        reservation = Reservation.get_by_id(reservation_id=reservation_id)
-
-        if reservation is None:
-            return {'message': 'Reservation not found'}, HTTPStatus.NOT_FOUND
-
-        current_user = get_jwt_identity()
-
-        if current_user != reservation.user_id:
-            return {'message': 'Access is not allowed'}, HTTPStatus.FORBIDDEN
-
-        reservation.user_id = data.get('user_id') or reservation.user_id
-        reservation.workspace_id = data.get('workspace_id') or reservation.workspace_id
-        reservation.date = data.get('date') or reservation.date
-
-        reservation.save()
-
-        return reservation.dump(reservation), HTTPStatus.OK
-
-    @jwt_required()
-    def put(self, reservation_id):
-
-        json_data = request.get_json()
-
-        reservation = Reservation.get_by_id(reservation_id=reservation_id)
-
-        if reservation is None:
-            return {'message': 'reservation not found'}, HTTPStatus.NOT_FOUND
-
-        current_user = get_jwt_identity()
-
-        if current_user != reservation.user_id:
-            return {'message': 'Access is not allowed'}, HTTPStatus.FORBIDDEN
-
-        reservation.user_id = json_data['user_id']
-        reservation.workspace_id = json_data['workspace_id']
-        reservation.date = json_data['date']
-
-        reservation.save()
-
-        return reservation.data(), HTTPStatus.OK
-
-    @jwt_required()
     def delete(self, reservation_id):
         reservation = Reservation.get_by_id(reservation_id=reservation_id)
 
