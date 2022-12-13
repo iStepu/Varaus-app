@@ -44,7 +44,7 @@ class WorkspaceResource(Resource):
 
     @jwt_required(optional=True)
     def get(self, workspace_id):
-        workspace = Workspace.get_by_workspace_id(workspace_id=workspace_id)
+        workspace = Workspace.get_by_workspace_id(id=workspace_id)
 
         if workspace is None:
             return {'message': 'workspace not found'}, HTTPStatus.NOT_FOUND
