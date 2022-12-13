@@ -49,4 +49,6 @@ class WorkspaceResource(Resource):
         if workspace is None:
             return {'message': 'workspace not found'}, HTTPStatus.NOT_FOUND
 
-        return workspace.data, HTTPStatus.OK
+        data = workspace_schema.dump(workspace)
+
+        return data, HTTPStatus.OK
