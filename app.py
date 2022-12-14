@@ -9,12 +9,6 @@ from resources.token import TokenResource, RefreshResource, RevokeResource, bloc
 from resources.reservation import ReservationResource, ReservationListResource
 from resources.workspace import WorkspaceResource, WorkspaceListResource
 
-# Imported directly to be able to create the tables, can be removed
-# later when used in resources.
-from models.user import User
-from models.workspace import Workspace
-from models.reservation import Reservation
-
 
 def create_app():
     app = Flask(__name__)
