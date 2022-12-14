@@ -32,6 +32,11 @@ class ReservationSchema(Schema):
         if data["start_date"] < datetime.now():
             raise ValidationError("start_date must be later than now")
 
+        if data["start_date"].minute % 15 != 0:
+            raise ValidationError("start_date minutes must be divisible by 15")
+
+        if data["end_date"].minute % 15 != 0:
+            raise ValidationError("end_date minutes must be divisible by 15")
 
     @post_dump(pass_many=True)
     def wrap(self, data, many, **kwargs):
