@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from marshmallow import Schema, fields, post_dump, validates_schema, ValidationError
 
 from schemas.user import UserSchema
@@ -26,6 +28,9 @@ class ReservationSchema(Schema):
     def validate_dates(self, data, **kwargs):
         if data["start_date"] >= data["end_date"]:
             raise ValidationError("end_date must be later than start_date")
+
+        if data["start_date"] < datetime.now():
+            raise ValidationError("start_date must be later than now")
 
 
     @post_dump(pass_many=True)
