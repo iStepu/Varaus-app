@@ -34,6 +34,12 @@ class ReservationListResource(Resource):
         if not Workspace.get_by_workspace_id(data.get("workspace_id")):
             return {'message': 'Workspace does not exist'}, HTTPStatus.BAD_REQUEST
 
+        overlapping_reservations = Reservation.get_by_workspace_and_timeslot(
+            data["workspace_id"], data["start_date"], data["end_date"])
+
+        if overlapping_reservations:
+            return {'message': 'Timeslot not available'}, HTTPStatus.BAD_REQUEST
+
         reservation = Reservation(**data)
         reservation.user_id = current_user
         reservation.save()
