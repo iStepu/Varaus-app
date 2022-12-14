@@ -43,15 +43,17 @@ class ReservationListResource(Resource):
 
 class ReservationResource(Resource):
 
-    @jwt_required(optional=True)
-    def get(self, reservation_id):
+    @staticmethod
+    def get(reservation_id):
 
         reservation = Reservation.get_by_id(reservation_id)
 
         if reservation is None:
             return {'message': 'reservation not found'}, HTTPStatus.NOT_FOUND
 
-        current_user = get_jwt_identity()
+        data = reservation_schema.dump(reservation)
+
+        return data, HTTPStatus.OK
 
     @jwt_required()
     def delete(self, reservation_id):
