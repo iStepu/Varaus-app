@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, post_dump, validate, validates, ValidationError
+from marshmallow import Schema, fields, post_dump, validates_schema, ValidationError
 
 from schemas.user import UserSchema
 from schemas.workspace import WorkspaceSchema
@@ -21,6 +21,12 @@ class ReservationSchema(Schema):
 
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
+
+    @validates_schema
+    def validate_dates(self, data, **kwargs):
+        if data["start_date"] >= data["end_date"]:
+            raise ValidationError("end_date must be later than start_date")
+
 
     @post_dump(pass_many=True)
     def wrap(self, data, many, **kwargs):
